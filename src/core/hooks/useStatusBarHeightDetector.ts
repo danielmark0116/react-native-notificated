@@ -7,8 +7,17 @@ type Props = {
 
 const NativeStatusBarManager = require('react-native/Libraries/Components/StatusBar/NativeStatusBarManagerIOS')
 
+const PlatformAwareNativeModules = Platform.select({
+  ios: NativeModules,
+  android: NativeModules,
+  macos: NativeModules,
+  native: NativeModules,
+  windows: NativeModules,
+  web: { StatusBarManager: { getHeight: (cb: (height: number) => void) => cb(0) } },
+})
+
 export const useStatusBarHeightDetector = ({ isPortraitMode }: Props) => {
-  const { StatusBarManager } = NativeModules
+  const { StatusBarManager } = PlatformAwareNativeModules
   const [barHeight, setBarHeight] = useState(0)
 
   useEffect(() => {
